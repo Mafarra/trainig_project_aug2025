@@ -4,20 +4,6 @@ import 'package:trainig_project_aug2025/helpers/helpr_methods.dart';
 
 class AnimationHelpers {
   static Duration defaultDuration = const Duration(milliseconds: 300);
-  static Widget dismissibleWrapper({
-  required Widget child,
-  required Key key,
-  required BuildContext context,
-  required VoidCallback onDelete,
-}) {
-  return Dismissible(
-    key: key,
-    direction: DismissDirection.endToStart,
-    confirmDismiss: (_) async => await HelperMethods.showDeleteConfirmationDialog(context),
-    onDismissed: (_) => onDelete(),
-    child: child,
-  );
-}
 
 static Widget animatedAppearance({
   required Widget child,

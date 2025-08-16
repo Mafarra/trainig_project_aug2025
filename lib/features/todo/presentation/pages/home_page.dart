@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trainig_project_aug2025/blocs/todo_bloc.dart';
 import 'package:trainig_project_aug2025/core/constants/text_constants.dart';
+import 'package:trainig_project_aug2025/features/todo/presentation/widgets/app_widgets.dart';
 import 'package:trainig_project_aug2025/helpers/animation_helpers.dart';
 import 'package:trainig_project_aug2025/helpers/helpr_methods.dart';
 import 'package:trainig_project_aug2025/models/todo.dart';
@@ -55,7 +56,9 @@ class HomePageState extends State<HomePage> {
             final todos = snapshot.data;
             // 1️⃣ حالة الشيمر (Loading)
             if (todos == null) {
-              return AnimationHelpers.shimmerTodoList(itemCount: 5); // عدد افتراضي
+              return AnimationHelpers.shimmerTodoList(
+                itemCount: 5,
+              ); // عدد افتراضي
             }
             // 2️⃣ حالة القائمة فارغة
             if (todos.isEmpty) {
@@ -87,7 +90,7 @@ class HomePageState extends State<HomePage> {
                 );
 
                 // 3b️⃣ لفه بـ Animated + Dismissible Clean
-                return AnimationHelpers.dismissibleWrapper(
+                return AppWidgets.dismissibleWrapper(
                   key: Key(todo.id.toString()),
                   context: context,
                   onDelete: () {
