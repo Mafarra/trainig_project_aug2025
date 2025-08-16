@@ -40,23 +40,6 @@ class HelperMethods {
     }
   }
 
-  static Widget animatedTodoItem({required Widget child, required int index}) {
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0, end: 1),
-      duration: Duration(milliseconds: 300 + (index * 50)),
-      curve: Curves.easeOutCubic,
-      builder: (context, value, child) {
-        return Opacity(
-          opacity: value,
-          child: Transform.translate(
-            offset: Offset(0, (1 - value) * 20),
-            child: child,
-          ),
-        );
-      },
-      child: child,
-    );
-  }
 
   static Future<bool> showDeleteConfirmationDialog(BuildContext context) async {
     final result = await showDialog<bool>(
