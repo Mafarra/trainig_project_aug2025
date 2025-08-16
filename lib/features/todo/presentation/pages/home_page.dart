@@ -72,39 +72,42 @@ class HomePageState extends State<HomePage> {
                 ),
               );
             }
-
             // 3️⃣ حالة وجود عناصر
-            return ListView.builder(
-              itemCount: todos.length,
-              itemBuilder: (context, index) {
-                var todo = todos[index];
-                var todoWidget = TodoItem(
-                  todo: todo,
-                  bloc: todoBloc!,
-                  parentContext: context,
-                  onEdit: () => AnimationHelpers.navigateWithAnimation(
-                    context: context,
-                    page: TodoDetails(todo, false),
-                  ),
-                );
-
-                // 3b️⃣ لفه بـ Animated + Dismissible Clean
-                return AppWidgets.dismissibleWrapper(
-                  key: Key(todo.id.toString()),
-                  context: context,
-                  onDelete: () {
-                    todoBloc!.todoDeleteSink.add(todo);
-                    HelperMethods.showError(
-                      context,
-                      TextConstants.deleteSuccess,
-                    );
-                  },
-                  child: AnimationHelpers.animatedAppearance(
-                    index: index,
-                    child: todoWidget,
-                  ),
-                );
+            return ReorderableListView(
+              onReorder: (oldIndex, newIndex) {
+                if (newIndex > oldIndex) newIndex -= 1;
+                final item = todos.removeAt(oldIndex);
+                todos.insert(newIndex, item);
+                // إرسال القائمة الجديدة للـ BLoC لحفظ الترتيب
+                todoBloc!.todoUpdateOrderSink.add(todos);
               },
+              children: [
+                for (int index = 0; index < todos.length; index++)
+                  AppWidgets.dismissibleWrapper(
+                    key: Key(todos[index].id.toString()),
+                    context: context,
+                    onDelete: () {
+                      todoBloc!.todoDeleteSink.add(todos[index]);
+                      HelperMethods.showError(
+                        context,
+                        TextConstants.deleteSuccess,
+                      );
+                    },
+                    child: AnimationHelpers.animatedTodoItem(
+                      index: index,
+                      child: TodoItem(
+                        index: index,
+                        todo: todos[index],
+                        bloc: todoBloc!,
+                        parentContext: context,
+                        onEdit: () => AnimationHelpers.navigateWithAnimation(
+                          context: context,
+                          page: TodoDetails(todos[index], false),
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
             );
           },
         ),

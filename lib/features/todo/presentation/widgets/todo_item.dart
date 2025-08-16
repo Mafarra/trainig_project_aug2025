@@ -9,6 +9,7 @@ class TodoItem extends StatelessWidget {
   final TodoBloc bloc;
   final BuildContext parentContext;
   final VoidCallback onEdit;
+  final int index;
 
   const TodoItem({
     super.key,
@@ -16,6 +17,7 @@ class TodoItem extends StatelessWidget {
     required this.bloc,
     required this.parentContext,
     required this.onEdit,
+    required this.index,
   });
 
   @override
@@ -43,9 +45,19 @@ class TodoItem extends StatelessWidget {
         HelperMethods.showError(parentContext, TextConstants.deleteSuccess);
       },
       child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: Theme.of(parentContext).highlightColor,
-          child: Text("${todo.priority}"),
+        leading: Row(
+          mainAxisSize: MainAxisSize.min, // حتى لا ياخذ كامل المسافة
+          children: [
+            ReorderableDragStartListener(
+              index: index, // لازم تجيب الـ index من الـ ListView.builder
+              child: Icon(Icons.drag_handle),
+            ),
+            SizedBox(width: 8), // مسافة بين الأيقونة و الـ CircleAvatar
+            CircleAvatar(
+              backgroundColor: Theme.of(parentContext).highlightColor,
+              child: Text("${todo.priority}"),
+            ),
+          ],
         ),
         title: Text(todo.name),
         subtitle: Text(todo.description),
