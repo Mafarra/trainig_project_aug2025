@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trainig_project_aug2025/blocs/todo_bloc.dart';
 import 'package:trainig_project_aug2025/features/todo/presentation/pages/home_page.dart';
+import 'package:trainig_project_aug2025/helpers/animation_helpers.dart';
 import 'package:trainig_project_aug2025/helpers/helpr_methods.dart';
 import 'package:trainig_project_aug2025/models/todo.dart';
 
@@ -69,15 +70,9 @@ class TodoDetails extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.all(padding),
-              child: MaterialButton(
-                color: Colors.green,
+              child: AnimationHelpers().animatedSaveButton(
                 child: Text('Save'),
                 onPressed: () async {
-                  // var name = txtName.text.trim();
-                  // var description = txtDescription.text.trim();
-                  // var completeBy = txtCompleteBy.text.trim();
-                  // var priority = txtPriority.text.trim();
-
                   // ✅ استدعاء الفحص
                   var errorMessage = HelperMethods.validateTaskFields(
                     name: txtName.text.trim(),

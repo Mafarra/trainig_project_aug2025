@@ -35,6 +35,38 @@ class AnimationHelpers {
     );
   }
 
+// ValueNotifier للتحكم بحجم زر الحفظ
+final ValueNotifier<double> saveButtonScale = ValueNotifier(1.0);
+
+Widget animatedSaveButton({required VoidCallback onPressed, required Widget child}) {
+  return ValueListenableBuilder<double>(
+    valueListenable: saveButtonScale,
+    builder: (context, scale, _) {
+      return Transform.scale(
+        scale: scale,
+        child: MaterialButton(
+          color: Colors.green, // لون الزر
+          onPressed: () {
+            // تكبير الزر عند الضغط
+            saveButtonScale.value = 1.2;
+
+            // بعد 150ms يرجع الحجم الطبيعي
+            Future.delayed(Duration(milliseconds: 150), () {
+              saveButtonScale.value = 1.0;
+            });
+
+            // تنفيذ الـ onPressed المرسل بعد الانيميشن
+            Future.delayed(Duration(milliseconds: 160), () {
+              onPressed();
+            });
+          },
+          child: child,
+        ),
+      );
+    },
+  );
+}
+
   static Future<void> navigateWithAnimation({
     required BuildContext context,
     required Widget page,
