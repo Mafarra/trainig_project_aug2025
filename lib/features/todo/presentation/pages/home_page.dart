@@ -53,12 +53,10 @@ class HomePageState extends State<HomePage> {
           initialData: todoBloc?.todoList ?? [],
           builder: (context, snapshot) {
             final todos = snapshot.data;
-
             // 1️⃣ حالة الشيمر (Loading)
             if (todos == null) {
               return AppWidgets.shimmerTodoList(itemCount: 5); // عدد افتراضي
             }
-
             // 2️⃣ حالة القائمة فارغة
             if (todos.isEmpty) {
               return Center(
