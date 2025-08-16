@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:trainig_project_aug2025/blocs/todo_bloc.dart';
-import 'package:trainig_project_aug2025/core/constants/text_constants.dart';
 import 'package:trainig_project_aug2025/features/todo/presentation/pages/home_page.dart';
 import 'package:trainig_project_aug2025/helpers/helpr_methods.dart';
 import 'package:trainig_project_aug2025/models/todo.dart';
@@ -74,47 +73,43 @@ class TodoDetails extends StatelessWidget {
                 color: Colors.green,
                 child: Text('Save'),
                 onPressed: () async {
-                  // تحقق من القيم إذا كانت الحقول غير فارغة
-                  if (!HelperMethods.areFieldsEmpty([
-                        txtName,
-                        txtDescription,
-                        txtCompleteBy,
-                        txtPriority,
-                      ]) &&
-                      HelperMethods.isInteger(txtPriority.text)) {
-                    await HelperMethods.saveTodo(
-                      bloc: bloc,
-                      todo: Todo(
-                        txtName.text,
-                        txtDescription.text,
-                        txtCompleteBy.text,
-                        int.tryParse(txtPriority.text)!,
-                      )..id = todo.id,
-                      isNew: isNew,
-                      context: context,
-                    );
-                    print("::::::::::saveTodo 1::::::::");
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => HomePage(key: super.key),
-                      ),
-                      (route) => false,
-                    );
-                  } else {
-                    if (!HelperMethods.isInteger(txtPriority.text)) {
-                      HelperMethods.showError(
-                        context,
-                        TextConstants.errorOccurredInvalidPriority,
-                      );
-                      return;
-                    }
-                    HelperMethods.showError(
-                      context,
-                      TextConstants.errorOccurredEmptyFields,
-                    );
-                    print("error occured empty fields 115");
+                  // var name = txtName.text.trim();
+                  // var description = txtDescription.text.trim();
+                  // var completeBy = txtCompleteBy.text.trim();
+                  // var priority = txtPriority.text.trim();
+
+                  // ✅ استدعاء الفحص
+                  var errorMessage = HelperMethods.validateTaskFields(
+                    name: txtName.text.trim(),
+                    description: txtDescription.text.trim(),
+                    completeBy: txtCompleteBy.text.trim(),
+                    priority: txtPriority.text.trim(),
+                  );
+                  if (errorMessage != null) {
+                    HelperMethods.showError(context, errorMessage);
+                    return;
                   }
+                  // ✅ لو الفحص مرّ، نكمل الحفظ
+                  await HelperMethods.saveTodo(
+                    bloc: bloc,
+                    todo: Todo(
+                      txtName.text.trim(),
+                      txtDescription.text.trim(),
+                      txtCompleteBy.text.trim(),
+                      int.tryParse(txtPriority.text.trim())!,
+                    )..id = todo.id,
+                    isNew: isNew,
+                    context: context,
+                  );
+
+                  // ✅ نرجع للهوم
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HomePage(key: super.key),
+                    ),
+                    (route) => false,
+                  );
                 },
               ),
             ),

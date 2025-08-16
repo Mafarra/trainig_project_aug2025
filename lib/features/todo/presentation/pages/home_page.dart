@@ -38,12 +38,13 @@ class HomePageState extends State<HomePage> {
     todos = todoBloc?.todoList;
     return Scaffold(
       appBar: AppBar(title: Text(TextConstants.appTitle)),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: AnimationHelpers().animatedFAB(
         child: Icon(Icons.add),
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => TodoDetails(todo, true)),
+          AnimationHelpers.navigateWithAnimation(
+            context: context,
+            page: TodoDetails(todo, true),
           );
         },
       ),
@@ -76,16 +77,14 @@ class HomePageState extends State<HomePage> {
             return ListView.builder(
               itemCount: todos.length,
               itemBuilder: (context, index) {
-                final todo = todos[index];
-
-                // 3a️⃣ عنصر TodoItem
-                final todoWidget = TodoItem(
+                var todo = todos[index];
+                var todoWidget = TodoItem(
                   todo: todo,
                   bloc: todoBloc!,
                   parentContext: context,
-                  onEdit: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => TodoDetails(todo, false)),
+                  onEdit: () => AnimationHelpers.navigateWithAnimation(
+                    context: context,
+                    page: TodoDetails(todo, false),
                   ),
                 );
 
