@@ -15,6 +15,25 @@ class TodoDetails extends StatelessWidget {
 
   final TodoBloc bloc;
   TodoDetails(this.todo, this.isNew, {super.key}) : bloc = TodoBloc();
+  
+  Widget _paddedTextField({
+    required TextEditingController controller,
+    required String hint,
+    required double padding,
+    TextInputType? keyboardType,
+  }) {
+    return Padding(
+      padding: EdgeInsets.all(padding),
+      child: TextField(
+        controller: controller,
+        keyboardType: keyboardType,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          hintText: hint,
+        ),
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     final double padding = 20.0;
@@ -27,46 +46,26 @@ class TodoDetails extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(padding),
-              child: TextField(
-                controller: txtName,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Name',
-                ),
-              ),
+            _paddedTextField(
+              controller: txtName,
+              hint: 'Name',
+              padding: padding,
             ),
-            Padding(
-              padding: EdgeInsets.all(padding),
-              child: TextField(
-                controller: txtDescription,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Description',
-                ),
-              ),
+            _paddedTextField(
+              controller: txtDescription,
+              hint: 'Description',
+              padding: padding,
             ),
-            Padding(
-              padding: EdgeInsets.all(padding),
-              child: TextField(
-                controller: txtCompleteBy,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Complete by',
-                ),
-              ),
+            _paddedTextField(
+              controller: txtCompleteBy,
+              hint: 'Complete by',
+              padding: padding,
             ),
-            Padding(
-              padding: EdgeInsets.all(padding),
-              child: TextField(
-                controller: txtPriority,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Priority',
-                ),
-              ),
+            _paddedTextField(
+              controller: txtPriority,
+              hint: 'Priority',
+              padding: padding,
+              keyboardType: TextInputType.number,
             ),
             Padding(
               padding: EdgeInsets.all(padding),
