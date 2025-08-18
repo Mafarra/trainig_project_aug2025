@@ -4,6 +4,7 @@ import 'package:trainig_project_aug2025/features/todo/presentation/pages/home_pa
 import 'package:trainig_project_aug2025/helpers/animation_helpers.dart';
 import 'package:trainig_project_aug2025/helpers/helpr_methods.dart';
 import 'package:trainig_project_aug2025/models/todo.dart';
+import 'package:trainig_project_aug2025/features/todo/presentation/widgets/app_widgets.dart';
 
 class TodoDetails extends StatelessWidget {
   final Todo todo;
@@ -27,49 +28,30 @@ class TodoDetails extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(padding),
-              child: TextField(
-                controller: txtName,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Name',
-                ),
-              ),
+            AppPaddedTextField(
+              controller: txtName,
+              hint: 'Name',
+              padding: padding,
             ),
-            Padding(
-              padding: EdgeInsets.all(padding),
-              child: TextField(
-                controller: txtDescription,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Description',
-                ),
-              ),
+            AppPaddedTextField(
+              controller: txtDescription,
+              hint: 'Description',
+              padding: padding,
+              maxLines: 3,
             ),
-            Padding(
-              padding: EdgeInsets.all(padding),
-              child: TextField(
-                controller: txtCompleteBy,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Complete by',
-                ),
-              ),
+            AppPaddedTextField(
+              controller: txtCompleteBy,
+              hint: 'Complete by',
+              padding: padding,
             ),
-            Padding(
-              padding: EdgeInsets.all(padding),
-              child: TextField(
-                controller: txtPriority,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Priority',
-                ),
-              ),
+            AppPaddedTextField(
+              controller: txtPriority,
+              hint: 'Priority',
+              padding: padding,
+              keyboardType: TextInputType.number,
             ),
-            Padding(
-              padding: EdgeInsets.all(padding),
+            AppPadded(
+              all: padding,
               child: AnimationHelpers().animatedSaveButton(
                 child: Text('Save'),
                 onPressed: () async {
@@ -111,6 +93,22 @@ class TodoDetails extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class AppPadded extends StatelessWidget {
+  final Widget child;
+  final double all;
+  final EdgeInsets? padding;
+
+  const AppPadded({super.key, required this.child, this.all = 20.0, this.padding});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: padding ?? EdgeInsets.all(all),
+      child: child,
     );
   }
 }
