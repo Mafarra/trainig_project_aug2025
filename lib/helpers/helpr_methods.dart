@@ -23,10 +23,7 @@ class HelperMethods {
     required bool isNew,
     required BuildContext context,
   }) async {
-    todo.name = todo.name;
-    todo.description = todo.description;
-    todo.completeBy = todo.completeBy;
-    todo.priority = todo.priority;
+    // ✅ تحقق من الحقول
     if (isNew) {
       bloc.todoInsertSink.add(todo);
       ScaffoldMessenger.of(
@@ -40,22 +37,48 @@ class HelperMethods {
     }
   }
 
-  static Widget animatedTodoItem({required Widget child, required int index}) {
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0, end: 1),
-      duration: Duration(milliseconds: 300 + (index * 50)),
-      curve: Curves.easeOutCubic,
-      builder: (context, value, child) {
-        return Opacity(
-          opacity: value,
-          child: Transform.translate(
-            offset: Offset(0, (1 - value) * 20),
-            child: child,
-          ),
-        );
-      },
-      child: child,
-    );
+  /// يتحقق من الحقول ويرجع رسالة خطأ إذا في مشكلة
+  static String? validateTaskFields({
+    required String name,
+    required String description,
+    required String completeBy,
+    required String priority,
+  }) {
+    // الخطوة 1: التحقق من الحقول الفارغة
+    if ([
+      name,
+      description,
+      completeBy,
+      priority,
+    ].any((field) => field.trim().isEmpty)) {
+      return "Please fill all fields";
+    }
+
+    // الخطوة 2: تحقق مخصص لكل حقل
+    if (HelperMethods.isInteger(name)) {
+      return "Name must contain letters";
+    }
+
+    if (HelperMethods.isInteger(description)) {
+      return "Description must contain letters";
+    }
+
+    if (HelperMethods.isInteger(completeBy)) {
+      return "Complete By must contain letters";
+    }
+
+    // ✅ التحقق أن Priority رقم صحيح
+    if (!isInteger(priority)) {
+      return TextConstants.errorOccurredInvalidPriority;
+    }
+
+    // ✅ التحقق أن Priority > 0
+    final parsedPriority = int.parse(priority);
+    if (parsedPriority <= 0) {
+      return "Priority must be a number greater than 0";
+    }
+
+    return null; // ✅ يعني الحقول كلها صحيحة
   }
 
   static Future<bool> showDeleteConfirmationDialog(BuildContext context) async {

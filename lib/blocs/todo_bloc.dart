@@ -11,6 +11,7 @@ class TodoBloc {
   final _todosStreamController = StreamController<List<Todo>>.broadcast();
   final _todoInsertController = StreamController<Todo>();
   final _todoUpdateController = StreamController<Todo>();
+  final _todoUpdateOrderController = StreamController<List<Todo>>();
   final _todoDeleteController = StreamController<Todo>();
 
   // Getters for streams and sinks
@@ -18,6 +19,8 @@ class TodoBloc {
   StreamSink<List<Todo>> get todosSink => _todosStreamController.sink;
   StreamSink<Todo> get todoInsertSink => _todoInsertController.sink;
   StreamSink<Todo> get todoUpdateSink => _todoUpdateController.sink;
+  StreamSink<List<Todo>> get todoUpdateOrderSink =>
+      _todoUpdateOrderController.sink;
   StreamSink<Todo> get todoDeleteSink => _todoDeleteController.sink;
 
   // Constructor
@@ -25,9 +28,21 @@ class TodoBloc {
     _todoInsertController.stream.listen(_addTodo);
     _todoUpdateController.stream.listen(_updateTodo);
     _todoDeleteController.stream.listen(_deleteTodo);
+    _todoUpdateOrderController.stream.listen(_updateTodosOrder);
 
     // Load todos initially
     getTodos();
+  }
+  Future<void> _updateTodosOrder(List<Todo> newOrder) async {
+    // تحديث الـ priority لكل عنصر حسب موقعه الجديد
+    for (int i = 0; i < newOrder.length; i++) {
+      final todo = newOrder[i];
+      todo.priority = i + 1; // ترتيب جديد
+      await db.updateTodo(todo); // حفظ كل عنصر في قاعدة البيانات
+    }
+    // إعادة تحميل القائمة بعد الترتيب
+    await getTodosSorted();
+    await getTodos();
   }
 
   // Load todos from database

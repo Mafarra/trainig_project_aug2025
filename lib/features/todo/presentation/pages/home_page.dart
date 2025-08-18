@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:trainig_project_aug2025/blocs/todo_bloc.dart';
 import 'package:trainig_project_aug2025/core/constants/text_constants.dart';
 import 'package:trainig_project_aug2025/features/todo/presentation/widgets/app_widgets.dart';
+import 'package:trainig_project_aug2025/helpers/animation_helpers.dart';
 import 'package:trainig_project_aug2025/helpers/helpr_methods.dart';
 import 'package:trainig_project_aug2025/models/todo.dart';
 import '../widgets/todo_item.dart';
@@ -37,12 +38,13 @@ class HomePageState extends State<HomePage> {
     todos = todoBloc?.todoList;
     return Scaffold(
       appBar: AppBar(title: Text(TextConstants.appTitle)),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: AnimationHelpers().animatedFAB(
         child: Icon(Icons.add),
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => TodoDetails(todo, true)),
+          AnimationHelpers.navigateWithAnimation(
+            context: context,
+            page: TodoDetails(todo, true),
           );
         },
       ),
@@ -53,12 +55,12 @@ class HomePageState extends State<HomePage> {
           initialData: todoBloc?.todoList ?? [],
           builder: (context, snapshot) {
             final todos = snapshot.data;
-
             // 1️⃣ حالة الشيمر (Loading)
             if (todos == null) {
-              return AppWidgets.shimmerTodoList(itemCount: 5); // عدد افتراضي
+              return AnimationHelpers.shimmerTodoList(
+                itemCount: 5,
+              ); // عدد افتراضي
             }
-
             // 2️⃣ حالة القائمة فارغة
             if (todos.isEmpty) {
               return Center(
@@ -70,41 +72,42 @@ class HomePageState extends State<HomePage> {
                 ),
               );
             }
-
             // 3️⃣ حالة وجود عناصر
-            return ListView.builder(
-              itemCount: todos.length,
-              itemBuilder: (context, index) {
-                final todo = todos[index];
-
-                // 3a️⃣ عنصر TodoItem
-                final todoWidget = TodoItem(
-                  todo: todo,
-                  bloc: todoBloc!,
-                  parentContext: context,
-                  onEdit: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => TodoDetails(todo, false)),
-                  ),
-                );
-
-                // 3b️⃣ لفه بـ Animated + Dismissible Clean
-                return AppWidgets.dismissibleWrapper(
-                  key: Key(todo.id.toString()),
-                  context: context,
-                  onDelete: () {
-                    todoBloc!.todoDeleteSink.add(todo);
-                    HelperMethods.showError(
-                      context,
-                      TextConstants.deleteSuccess,
-                    );
-                  },
-                  child: AppWidgets.animatedAppearance(
-                    index: index,
-                    child: todoWidget,
-                  ),
-                );
+            return ReorderableListView(
+              onReorder: (oldIndex, newIndex) {
+                if (newIndex > oldIndex) newIndex -= 1;
+                final item = todos.removeAt(oldIndex);
+                todos.insert(newIndex, item);
+                // إرسال القائمة الجديدة للـ BLoC لحفظ الترتيب
+                todoBloc!.todoUpdateOrderSink.add(todos);
               },
+              children: [
+                for (int index = 0; index < todos.length; index++)
+                  AppWidgets.dismissibleWrapper(
+                    key: Key(todos[index].id.toString()),
+                    context: context,
+                    onDelete: () {
+                      todoBloc!.todoDeleteSink.add(todos[index]);
+                      HelperMethods.showError(
+                        context,
+                        TextConstants.deleteSuccess,
+                      );
+                    },
+                    child: AnimationHelpers.animatedTodoItem(
+                      index: index,
+                      child: TodoItem(
+                        index: index,
+                        todo: todos[index],
+                        bloc: todoBloc!,
+                        parentContext: context,
+                        onEdit: () => AnimationHelpers.navigateWithAnimation(
+                          context: context,
+                          page: TodoDetails(todos[index], false),
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
             );
           },
         ),
