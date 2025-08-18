@@ -4,6 +4,7 @@ import 'package:trainig_project_aug2025/features/todo/presentation/pages/home_pa
 import 'package:trainig_project_aug2025/helpers/animation_helpers.dart';
 import 'package:trainig_project_aug2025/helpers/helpr_methods.dart';
 import 'package:trainig_project_aug2025/models/todo.dart';
+import 'package:trainig_project_aug2025/features/todo/presentation/widgets/app_widgets.dart';
 
 class TodoDetails extends StatelessWidget {
   final Todo todo;
@@ -15,25 +16,6 @@ class TodoDetails extends StatelessWidget {
 
   final TodoBloc bloc;
   TodoDetails(this.todo, this.isNew, {super.key}) : bloc = TodoBloc();
-  
-  Widget _paddedTextField({
-    required TextEditingController controller,
-    required String hint,
-    required double padding,
-    TextInputType? keyboardType,
-  }) {
-    return AppPadded(
-      all: padding,
-      child: TextField(
-        controller: controller,
-        keyboardType: keyboardType,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: hint,
-        ),
-      ),
-    );
-  }
   @override
   Widget build(BuildContext context) {
     final double padding = 20.0;
@@ -46,22 +28,23 @@ class TodoDetails extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            _paddedTextField(
+            AppPaddedTextField(
               controller: txtName,
               hint: 'Name',
               padding: padding,
             ),
-            _paddedTextField(
+            AppPaddedTextField(
               controller: txtDescription,
               hint: 'Description',
               padding: padding,
+              maxLines: 3,
             ),
-            _paddedTextField(
+            AppPaddedTextField(
               controller: txtCompleteBy,
               hint: 'Complete by',
               padding: padding,
             ),
-            _paddedTextField(
+            AppPaddedTextField(
               controller: txtPriority,
               hint: 'Priority',
               padding: padding,
