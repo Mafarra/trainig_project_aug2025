@@ -80,13 +80,23 @@ class TodoDetails extends StatelessWidget {
                   );
 
                   // ✅ نرجع للهوم
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => HomePage(key: super.key),
-                    ),
-                    (route) => false,
-                  );
+                  if (context.mounted) {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HomePage(key: super.key),
+                      ),
+                      (route) => false,
+                    );
+                  } else {
+                    // Handle unmounted case - show success message and stay on current screen
+                    if (context.mounted) {
+                      HelperMethods.showError(
+                        context,
+                        TextConstants.saveSuccessNavigationError,
+                      );
+                    }
+                  }
                 },
               ),
             ),

@@ -16,7 +16,10 @@ class AppWidgets {
       direction: DismissDirection.endToStart,
       confirmDismiss: (_) async =>
           await HelperMethods.showDeleteConfirmationDialog(context),
-      onDismissed: (_) => onDelete(),
+      onDismissed: (_) {
+        onDelete();
+        // Note: onDelete callback should handle its own context.mounted check
+      },
       child: child,
     );
   }

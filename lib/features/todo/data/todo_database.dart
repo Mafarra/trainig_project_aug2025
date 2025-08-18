@@ -14,8 +14,9 @@ class TodoDb {
   factory TodoDb() => _singleton;
 
   final DatabaseFactory dbFactory = databaseFactoryIo;
-  final StoreRef<int, Map<String, dynamic>> store =
-      intMapStoreFactory.store('todos');
+  final StoreRef<int, Map<String, dynamic>> store = intMapStoreFactory.store(
+    'todos',
+  );
 
   Database? _database; // Nullable لحماية null safety
 
@@ -56,10 +57,7 @@ class TodoDb {
 
   Future<List<Todo>> getTodos() async {
     final db = await database;
-    final finder = Finder(sortOrders: [
-      SortOrder('priority'),
-      SortOrder('id'),
-    ]);
+    final finder = Finder(sortOrders: [SortOrder('priority'), SortOrder('id')]);
     final todosSnapshot = await store.find(db, finder: finder);
 
     return todosSnapshot.map((snapshot) {

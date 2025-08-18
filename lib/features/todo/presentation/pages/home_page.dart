@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trainig_project_aug2025/blocs/todo_bloc.dart';
+import 'package:trainig_project_aug2025/core/constants/app_colors.dart';
 import 'package:trainig_project_aug2025/core/constants/size_constants.dart';
 import 'package:trainig_project_aug2025/core/constants/text_constants.dart';
 import 'package:trainig_project_aug2025/features/todo/presentation/widgets/app_widgets.dart';
@@ -67,9 +68,9 @@ class HomePageState extends State<HomePage> {
               return Center(
                 child: Text(
                   TextConstants.emptyTasks,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppColors.emptyStateText,
+                  ),
                 ),
               );
             }
@@ -89,10 +90,12 @@ class HomePageState extends State<HomePage> {
                     context: context,
                     onDelete: () {
                       todoBloc!.todoDeleteSink.add(todos[index]);
-                      HelperMethods.showError(
-                        context,
-                        TextConstants.deleteSuccess,
-                      );
+                      if (context.mounted) {
+                        HelperMethods.showError(
+                          context,
+                          TextConstants.deleteSuccess,
+                        );
+                      }
                     },
                     child: AnimationHelpers.animatedTodoItem(
                       index: index,

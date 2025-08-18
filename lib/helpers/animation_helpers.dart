@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trainig_project_aug2025/core/constants/app_colors.dart';
 import 'package:trainig_project_aug2025/core/constants/size_constants.dart';
 
 class AnimationHelpers {
@@ -49,7 +50,7 @@ class AnimationHelpers {
         return Transform.scale(
           scale: scale,
           child: MaterialButton(
-            color: Colors.green, // لون الزر
+            color: AppColors.buttonSuccess, // لون الزر
             onPressed: () {
               // تكبير الزر عند الضغط
               saveButtonScale.value = 1.2;
@@ -136,9 +137,9 @@ class AnimationHelpers {
               borderRadius: BorderRadius.circular(SizeConstants.radiusM),
               gradient: LinearGradient(
                 colors: [
-                  Colors.grey.shade300,
-                  Colors.grey.shade100,
-                  Colors.grey.shade300,
+                  AppColors.shimmerBase,
+                  AppColors.shimmerHighlight,
+                  AppColors.shimmerEnd,
                 ],
                 stops: [0.1, 0.5, 0.9],
                 begin: Alignment(-1, -0.3),

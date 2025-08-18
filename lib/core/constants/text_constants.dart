@@ -33,4 +33,8 @@ class TextConstants {
 
   // Navigation / Misc
   static const String homePageTitle = 'Home';
+
+  // Unmounted context messages
+  static const String saveSuccessNavigationError =
+      'تم الحفظ بنجاح، لكن حدث خطأ في التنقل. الرجاء العودة للصفحة الرئيسية يدوياً.';
 }
