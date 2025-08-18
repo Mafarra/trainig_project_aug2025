@@ -96,19 +96,3 @@ class TodoDetails extends StatelessWidget {
     );
   }
 }
-
-class AppPadded extends StatelessWidget {
-  final Widget child;
-  final double all;
-  final EdgeInsets? padding;
-
-  const AppPadded({super.key, required this.child, this.all = 20.0, this.padding});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: padding ?? EdgeInsets.all(all),
-      child: child,
-    );
-  }
-}

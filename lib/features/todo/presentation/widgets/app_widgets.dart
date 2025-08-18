@@ -62,4 +62,13 @@ class AppWidgets {
       ),
     );
   }
+
+  /// A reusable padded widget for consistent spacing
+  static Widget appPadded({
+    required Widget child,
+    double all = SizeConstants.paddingXL,
+    EdgeInsets? padding,
+  }) {
+    return Padding(padding: padding ?? EdgeInsets.all(all), child: child);
+  }
 }
