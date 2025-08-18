@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:trainig_project_aug2025/blocs/todo_bloc.dart';
+import 'package:trainig_project_aug2025/core/constants/size_constants.dart';
+import 'package:trainig_project_aug2025/core/constants/text_constants.dart';
 import 'package:trainig_project_aug2025/features/todo/presentation/pages/home_page.dart';
+import 'package:trainig_project_aug2025/features/todo/presentation/widgets/app_widgets.dart';
 import 'package:trainig_project_aug2025/helpers/animation_helpers.dart';
 import 'package:trainig_project_aug2025/helpers/helpr_methods.dart';
 import 'package:trainig_project_aug2025/models/todo.dart';
@@ -17,7 +20,6 @@ class TodoDetails extends StatelessWidget {
   TodoDetails(this.todo, this.isNew, {super.key}) : bloc = TodoBloc();
   @override
   Widget build(BuildContext context) {
-    final double padding = 20.0;
     txtName.text = todo.name;
     txtDescription.text = todo.description;
     txtCompleteBy.text = todo.completeBy;
@@ -27,49 +29,29 @@ class TodoDetails extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(padding),
-              child: TextField(
-                controller: txtName,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Name',
-                ),
-              ),
+            AppWidgets.customTextField(
+              controller: txtName,
+              hintText: TextConstants.nameLabel,
+              padding: SizeConstants.paddingXL,
+            ),
+            AppWidgets.customTextField(
+              controller: txtDescription,
+              hintText: TextConstants.descriptionLabel,
+              padding: SizeConstants.paddingXL,
+            ),
+            AppWidgets.customTextField(
+              controller: txtCompleteBy,
+              hintText: TextConstants.completeByLabel,
+              padding: SizeConstants.paddingXL,
+            ),
+            AppWidgets.customTextField(
+              controller: txtPriority,
+              hintText: TextConstants.priorityLabel,
+              padding: SizeConstants.paddingXL,
+              keyboardType: TextInputType.number,
             ),
             Padding(
-              padding: EdgeInsets.all(padding),
-              child: TextField(
-                controller: txtDescription,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Description',
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(padding),
-              child: TextField(
-                controller: txtCompleteBy,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Complete by',
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(padding),
-              child: TextField(
-                controller: txtPriority,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Priority',
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(padding),
+              padding: EdgeInsets.all(SizeConstants.paddingXL),
               child: AnimationHelpers().animatedSaveButton(
                 child: Text('Save'),
                 onPressed: () async {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trainig_project_aug2025/blocs/todo_bloc.dart';
+import 'package:trainig_project_aug2025/core/constants/size_constants.dart';
 import 'package:trainig_project_aug2025/core/constants/text_constants.dart';
 import 'package:trainig_project_aug2025/helpers/helpr_methods.dart';
 import 'package:trainig_project_aug2025/models/todo.dart';
@@ -26,13 +27,13 @@ class TodoItem extends StatelessWidget {
       secondaryBackground: Container(
         color: Colors.green,
         alignment: Alignment.centerRight,
-        padding: const EdgeInsets.only(right: 16),
+        padding: EdgeInsets.only(right: SizeConstants.paddingL),
         child: const Icon(Icons.delete, color: Colors.white),
       ),
       background: Container(
         color: Colors.red,
         alignment: Alignment.centerLeft,
-        padding: const EdgeInsets.only(left: 16),
+        padding: EdgeInsets.only(left: SizeConstants.paddingL),
         child: const Icon(Icons.delete, color: Colors.white),
       ),
       key: Key(todo.id.toString()),
@@ -52,7 +53,9 @@ class TodoItem extends StatelessWidget {
               index: index, // لازم تجيب الـ index من الـ ListView.builder
               child: Icon(Icons.drag_handle),
             ),
-            SizedBox(width: 8), // مسافة بين الأيقونة و الـ CircleAvatar
+            SizedBox(
+              width: SizeConstants.spacingS,
+            ), // مسافة بين الأيقونة و الـ CircleAvatar
             CircleAvatar(
               backgroundColor: Theme.of(parentContext).highlightColor,
               child: Text("${todo.priority}"),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trainig_project_aug2025/core/constants/size_constants.dart';
 
 class AnimationHelpers {
   static Duration defaultDuration = const Duration(milliseconds: 300);
@@ -35,37 +36,40 @@ class AnimationHelpers {
     );
   }
 
-// ValueNotifier للتحكم بحجم زر الحفظ
-final ValueNotifier<double> saveButtonScale = ValueNotifier(1.0);
+  // ValueNotifier للتحكم بحجم زر الحفظ
+  final ValueNotifier<double> saveButtonScale = ValueNotifier(1.0);
 
-Widget animatedSaveButton({required VoidCallback onPressed, required Widget child}) {
-  return ValueListenableBuilder<double>(
-    valueListenable: saveButtonScale,
-    builder: (context, scale, _) {
-      return Transform.scale(
-        scale: scale,
-        child: MaterialButton(
-          color: Colors.green, // لون الزر
-          onPressed: () {
-            // تكبير الزر عند الضغط
-            saveButtonScale.value = 1.2;
+  Widget animatedSaveButton({
+    required VoidCallback onPressed,
+    required Widget child,
+  }) {
+    return ValueListenableBuilder<double>(
+      valueListenable: saveButtonScale,
+      builder: (context, scale, _) {
+        return Transform.scale(
+          scale: scale,
+          child: MaterialButton(
+            color: Colors.green, // لون الزر
+            onPressed: () {
+              // تكبير الزر عند الضغط
+              saveButtonScale.value = 1.2;
 
-            // بعد 150ms يرجع الحجم الطبيعي
-            Future.delayed(Duration(milliseconds: 150), () {
-              saveButtonScale.value = 1.0;
-            });
+              // بعد 150ms يرجع الحجم الطبيعي
+              Future.delayed(Duration(milliseconds: 150), () {
+                saveButtonScale.value = 1.0;
+              });
 
-            // تنفيذ الـ onPressed المرسل بعد الانيميشن
-            Future.delayed(Duration(milliseconds: 160), () {
-              onPressed();
-            });
-          },
-          child: child,
-        ),
-      );
-    },
-  );
-}
+              // تنفيذ الـ onPressed المرسل بعد الانيميشن
+              Future.delayed(Duration(milliseconds: 160), () {
+                onPressed();
+              });
+            },
+            child: child,
+          ),
+        );
+      },
+    );
+  }
 
   static Future<void> navigateWithAnimation({
     required BuildContext context,
@@ -121,12 +125,15 @@ Widget animatedSaveButton({required VoidCallback onPressed, required Widget chil
       itemCount: itemCount,
       itemBuilder: (context, index) {
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: EdgeInsets.symmetric(
+            horizontal: SizeConstants.paddingL,
+            vertical: SizeConstants.spacingS,
+          ),
           child: AnimatedContainer(
             duration: Duration(milliseconds: 800),
             curve: Curves.easeInOut,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(SizeConstants.radiusM),
               gradient: LinearGradient(
                 colors: [
                   Colors.grey.shade300,
@@ -138,7 +145,7 @@ Widget animatedSaveButton({required VoidCallback onPressed, required Widget chil
                 end: Alignment(1, 0.3),
               ),
             ),
-            height: 70,
+            height: SizeConstants.textFieldHeightL,
           ),
         );
       },

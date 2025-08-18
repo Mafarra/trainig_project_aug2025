@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trainig_project_aug2025/blocs/todo_bloc.dart';
+import 'package:trainig_project_aug2025/core/constants/size_constants.dart';
 import 'package:trainig_project_aug2025/core/constants/text_constants.dart';
 import 'package:trainig_project_aug2025/features/todo/presentation/widgets/app_widgets.dart';
 import 'package:trainig_project_aug2025/helpers/animation_helpers.dart';
@@ -49,7 +50,7 @@ class HomePageState extends State<HomePage> {
         },
       ),
       body: Padding(
-        padding: const EdgeInsets.only(top: 15.0),
+        padding: EdgeInsets.only(top: SizeConstants.paddingM),
         child: StreamBuilder<List<Todo>>(
           stream: todoBloc?.todos,
           initialData: todoBloc?.todoList ?? [],
