@@ -22,8 +22,8 @@ class TodoDetails extends StatelessWidget {
     required double padding,
     TextInputType? keyboardType,
   }) {
-    return Padding(
-      padding: EdgeInsets.all(padding),
+    return AppPadded(
+      all: padding,
       child: TextField(
         controller: controller,
         keyboardType: keyboardType,
@@ -67,8 +67,8 @@ class TodoDetails extends StatelessWidget {
               padding: padding,
               keyboardType: TextInputType.number,
             ),
-            Padding(
-              padding: EdgeInsets.all(padding),
+            AppPadded(
+              all: padding,
               child: AnimationHelpers().animatedSaveButton(
                 child: Text('Save'),
                 onPressed: () async {
@@ -110,6 +110,22 @@ class TodoDetails extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class AppPadded extends StatelessWidget {
+  final Widget child;
+  final double all;
+  final EdgeInsets? padding;
+
+  const AppPadded({super.key, required this.child, this.all = 20.0, this.padding});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: padding ?? EdgeInsets.all(all),
+      child: child,
     );
   }
 }
