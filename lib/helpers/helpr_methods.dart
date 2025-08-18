@@ -163,4 +163,117 @@ class HelperMethods {
   static bool isInRange(num value, {required num min, required num max}) {
     return value >= min && value <= max;
   }
+
+  // ===== DATE AND TIME HELPER METHODS =====
+
+  /// Check if a todo is overdue
+  static bool isTodoOverdue(Todo todo) {
+    if (todo.endDate == null || todo.isCompleted) return false;
+    return DateTime.now().isAfter(todo.endDate!);
+  }
+
+  /// Check if a todo is due today
+  static bool isTodoDueToday(Todo todo) {
+    if (todo.endDate == null) return false;
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final dueDate = DateTime(
+      todo.endDate!.year,
+      todo.endDate!.month,
+      todo.endDate!.day,
+    );
+    return today.isAtSameMomentAs(dueDate);
+  }
+
+  /// Check if a todo is due soon (within 24 hours)
+  static bool isTodoDueSoon(Todo todo) {
+    if (todo.endDate == null || todo.isCompleted) return false;
+    final now = DateTime.now();
+    final difference = todo.endDate!.difference(now);
+    return difference.inHours <= 24 && difference.inHours > 0;
+  }
+
+  /// Get human-readable status text for a todo
+  static String getTodoStatusText(Todo todo) {
+    if (todo.isCompleted) return TextConstants.completedStatus;
+    if (isTodoOverdue(todo)) return TextConstants.overdueStatus;
+    if (isTodoDueToday(todo)) return TextConstants.dueTodayStatus;
+    if (isTodoDueSoon(todo)) return TextConstants.dueSoonStatus;
+    return TextConstants.pendingStatus;
+  }
+
+  /// Format date for display
+  static String formatDate(DateTime? date) {
+    if (date == null) return 'Not set';
+    return '${date.day}/${date.month}/${date.year}';
+  }
+
+  /// Format time for display
+  static String formatTime(DateTime? date) {
+    if (date == null) return 'Not set';
+    return '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+  }
+
+  /// Format date and time for display
+  static String formatDateTime(DateTime? date) {
+    if (date == null) return 'Not set';
+    return '${formatDate(date)} ${formatTime(date)}';
+  }
+
+  /// Get relative time string (e.g., "2 hours ago", "in 3 days")
+  static String getRelativeTime(DateTime? date) {
+    if (date == null) return 'Not set';
+
+    final now = DateTime.now();
+    final difference = date.difference(now);
+
+    if (difference.isNegative) {
+      // Past
+      final absDifference = difference.abs();
+      if (absDifference.inDays > 0) {
+        return '${absDifference.inDays} day${absDifference.inDays == 1 ? '' : 's'} ago';
+      } else if (absDifference.inHours > 0) {
+        return '${absDifference.inHours} hour${absDifference.inHours == 1 ? '' : 's'} ago';
+      } else {
+        return '${absDifference.inMinutes} minute${absDifference.inMinutes == 1 ? '' : 's'} ago';
+      }
+    } else {
+      // Future
+      if (difference.inDays > 0) {
+        return 'in ${difference.inDays} day${difference.inDays == 1 ? '' : 's'}';
+      } else if (difference.inHours > 0) {
+        return 'in ${difference.inHours} hour${difference.inHours == 1 ? '' : 's'}';
+      } else {
+        return 'in ${difference.inMinutes} minute${difference.inMinutes == 1 ? '' : 's'}';
+      }
+    }
+  }
+
+  /// Check if a date is today
+  static bool isToday(DateTime? date) {
+    if (date == null) return false;
+    final now = DateTime.now();
+    return date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day;
+  }
+
+  /// Check if a date is tomorrow
+  static bool isTomorrow(DateTime? date) {
+    if (date == null) return false;
+    final tomorrow = DateTime.now().add(Duration(days: 1));
+    return date.year == tomorrow.year &&
+        date.month == tomorrow.month &&
+        date.day == tomorrow.day;
+  }
+
+  /// Check if a date is this week
+  static bool isThisWeek(DateTime? date) {
+    if (date == null) return false;
+    final now = DateTime.now();
+    final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+    final endOfWeek = startOfWeek.add(Duration(days: 6));
+    return date.isAfter(startOfWeek.subtract(Duration(days: 1))) &&
+        date.isBefore(endOfWeek.add(Duration(days: 1)));
+  }
 }

@@ -53,6 +53,30 @@ class TodoBloc {
     _todosStreamController.add(todoList);
   }
 
+  // Refresh todos (for pull-to-refresh)
+  Future<void> refreshTodos() async {
+    try {
+      // Simulate a small delay for better UX
+      await Future.delayed(Duration(milliseconds: 300));
+
+      // Reload todos from database
+      final todosFromDb = await db.getTodos();
+      await getTodosSorted(); // Sort todos by priority
+      todoList = todosFromDb;
+      _todosStreamController.add(todoList);
+
+      // Optional: You can add success feedback here if needed
+      // print('Todos refreshed successfully');
+    } catch (e) {
+      // Handle any errors during refresh
+      // Error refreshing todos: $e
+      // Still update the stream with current data
+      _todosStreamController.add(todoList);
+      // Re-throw to show error in UI if needed
+      rethrow;
+    }
+  }
+
   Future<void> getTodosSorted() async {
     final todos = await db.getTodos(); // get all todos
     final sortedTodos = HelperMethods.sortTodosByPriority(
