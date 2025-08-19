@@ -37,4 +37,27 @@ class TextConstants {
   // Unmounted context messages
   static const String saveSuccessNavigationError =
       'تم الحفظ بنجاح، لكن حدث خطأ في التنقل. الرجاء العودة للصفحة الرئيسية يدوياً.';
+
+  // Refresh messages
+  static const String refreshSuccess = 'تم تحديث القائمة بنجاح';
+  static const String refreshError = 'حدث خطأ أثناء تحديث القائمة';
+
+  // Date and time labels
+  static const String startDateLabel = 'Start Date';
+  static const String endDateLabel = 'End Date';
+  static const String reminderDateLabel = 'Reminder';
+  static const String dueDateLabel = 'Due Date';
+
+  // Status messages
+  static const String completedStatus = 'Completed';
+  static const String overdueStatus = 'Overdue';
+  static const String dueTodayStatus = 'Due Today';
+  static const String dueSoonStatus = 'Due Soon';
+  static const String pendingStatus = 'Pending';
+
+  // Date picker messages
+  static const String selectDate = 'Select Date';
+  static const String selectTime = 'Select Time';
+  static const String setReminder = 'Set Reminder';
+  static const String noReminder = 'No Reminder';
 }

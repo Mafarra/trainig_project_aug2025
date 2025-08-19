@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:trainig_project_aug2025/core/constants/app_colors.dart';
 import 'package:trainig_project_aug2025/features/todo/presentation/pages/home_page.dart';
+import 'package:trainig_project_aug2025/services/notification_service.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize notification service
+  await NotificationService().initialize();
+
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

@@ -3,6 +3,7 @@ import 'package:trainig_project_aug2025/blocs/todo_bloc.dart';
 import 'package:trainig_project_aug2025/core/constants/app_colors.dart';
 import 'package:trainig_project_aug2025/core/constants/size_constants.dart';
 import 'package:trainig_project_aug2025/core/constants/text_constants.dart';
+import 'package:trainig_project_aug2025/features/todo/presentation/widgets/app_widgets.dart';
 import 'package:trainig_project_aug2025/helpers/helpr_methods.dart';
 import 'package:trainig_project_aug2025/models/todo.dart';
 
@@ -67,8 +68,48 @@ class TodoItem extends StatelessWidget {
                 ),
               ],
             ),
-            title: Text(todo.name),
-            subtitle: Text(todo.description),
+            title: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    todo.name,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                ),
+                AppWidgets.todoStatusChip(
+                  isCompleted: todo.isCompleted,
+                  isOverdue: todo.isOverdue,
+                  isDueToday: todo.isDueToday,
+                  isDueSoon: todo.isDueSoon,
+                ),
+              ],
+            ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (todo.description.isNotEmpty)
+                  Padding(
+                    padding: EdgeInsets.only(bottom: SizeConstants.spacingXS),
+                    child: Text(
+                      todo.description,
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                AppWidgets.todoDateInfo(
+                  startDate: todo.startDate,
+                  endDate: todo.endDate,
+                  reminderDate: todo.reminderDate,
+                  isOverdue: todo.isOverdue,
+                  isCompleted: todo.isCompleted,
+                ),
+              ],
+            ),
             trailing: IconButton(
               icon: const Icon(Icons.edit),
               onPressed: onEdit,

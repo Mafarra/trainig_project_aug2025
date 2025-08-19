@@ -75,43 +75,50 @@ class HomePageState extends State<HomePage> {
               );
             }
             // 3️⃣ حالة وجود عناصر
-            return ReorderableListView(
-              onReorder: (oldIndex, newIndex) {
-                if (newIndex > oldIndex) newIndex -= 1;
-                final item = todos.removeAt(oldIndex);
-                todos.insert(newIndex, item);
-                // إرسال القائمة الجديدة للـ BLoC لحفظ الترتيب
-                todoBloc!.todoUpdateOrderSink.add(todos);
+            return RefreshIndicator(
+              onRefresh: () async {
+                await todoBloc!.refreshTodos();
               },
-              children: [
-                for (int index = 0; index < todos.length; index++)
-                  AppWidgets.dismissibleWrapper(
-                    key: Key(todos[index].id.toString()),
-                    context: context,
-                    onDelete: () {
-                      todoBloc!.todoDeleteSink.add(todos[index]);
-                      if (context.mounted) {
-                        HelperMethods.showError(
-                          context,
-                          TextConstants.deleteSuccess,
-                        );
-                      }
-                    },
-                    child: AnimationHelpers.animatedTodoItem(
-                      index: index,
-                      child: TodoItem(
+              color: AppColors.primary,
+              backgroundColor: AppColors.surface,
+              child: ReorderableListView(
+                onReorder: (oldIndex, newIndex) {
+                  if (newIndex > oldIndex) newIndex -= 1;
+                  final item = todos.removeAt(oldIndex);
+                  todos.insert(newIndex, item);
+                  // إرسال القائمة الجديدة للـ BLoC لحفظ الترتيب
+                  todoBloc!.todoUpdateOrderSink.add(todos);
+                },
+                children: [
+                  for (int index = 0; index < todos.length; index++)
+                    AppWidgets.dismissibleWrapper(
+                      key: Key(todos[index].id.toString()),
+                      context: context,
+                      onDelete: () {
+                        todoBloc!.todoDeleteSink.add(todos[index]);
+                        if (context.mounted) {
+                          HelperMethods.showError(
+                            context,
+                            TextConstants.deleteSuccess,
+                          );
+                        }
+                      },
+                      child: AnimationHelpers.animatedTodoItem(
                         index: index,
-                        todo: todos[index],
-                        bloc: todoBloc!,
-                        parentContext: context,
-                        onEdit: () => AnimationHelpers.navigateWithAnimation(
-                          context: context,
-                          page: TodoDetails(todos[index], false),
+                        child: TodoItem(
+                          index: index,
+                          todo: todos[index],
+                          bloc: todoBloc!,
+                          parentContext: context,
+                          onEdit: () => AnimationHelpers.navigateWithAnimation(
+                            context: context,
+                            page: TodoDetails(todos[index], false),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             );
           },
         ),
