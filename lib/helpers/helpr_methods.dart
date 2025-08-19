@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:trainig_project_aug2025/blocs/todo_bloc.dart';
 import 'package:trainig_project_aug2025/core/constants/text_constants.dart';
 import 'package:trainig_project_aug2025/models/todo.dart';
+import 'package:trainig_project_aug2025/services/notification_service.dart';
 
 class HelperMethods {
   /// تحقق إذا كانت أي من الحقول فارغة
@@ -29,11 +30,19 @@ class HelperMethods {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(TextConstants.saveSuccess)));
+
+      // Schedule notification if reminder date is set
+      if (todo.reminderDate != null) {
+        await scheduleTodoNotification(todo);
+      }
     } else {
       bloc.todoUpdateSink.add(todo);
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(TextConstants.updateSuccess)));
+
+      // Update notification if reminder date changed
+      await updateTodoNotification(todo);
     }
   }
 
@@ -275,5 +284,37 @@ class HelperMethods {
     final endOfWeek = startOfWeek.add(Duration(days: 6));
     return date.isAfter(startOfWeek.subtract(Duration(days: 1))) &&
         date.isBefore(endOfWeek.add(Duration(days: 1)));
+  }
+
+  // Notification handling methods
+  static final NotificationService _notificationService = NotificationService();
+
+  /// Schedule notification for a todo reminder
+  static Future<void> scheduleTodoNotification(Todo todo) async {
+    if (todo.reminderDate == null) return;
+
+    // Generate notification ID if not exists
+    todo.notificationId ??= todo.generateNotificationId();
+
+    // Schedule the notification
+    await _notificationService.scheduleTodoReminder(todo);
+  }
+
+  /// Cancel notification for a todo
+  static Future<void> cancelTodoNotification(Todo todo) async {
+    if (todo.notificationId != null) {
+      await _notificationService.cancelNotification(todo.notificationId!);
+    }
+  }
+
+  /// Update notification when todo is modified
+  static Future<void> updateTodoNotification(Todo todo) async {
+    // Cancel existing notification
+    await cancelTodoNotification(todo);
+
+    // Schedule new notification if reminder date exists
+    if (todo.reminderDate != null) {
+      await scheduleTodoNotification(todo);
+    }
   }
 }

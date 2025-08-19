@@ -74,6 +74,11 @@ class Todo {
   bool get isDueSoon => HelperMethods.isTodoDueSoon(this);
   String get statusText => HelperMethods.getTodoStatusText(this);
 
+  // Generate unique notification ID
+  String generateNotificationId() {
+    return '${id ?? DateTime.now().millisecondsSinceEpoch}';
+  }
+
   // Copy with method for easy updates
   Todo copyWith({
     int? id,

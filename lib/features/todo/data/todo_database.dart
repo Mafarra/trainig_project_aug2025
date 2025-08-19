@@ -66,4 +66,96 @@ class TodoDb {
       return todo;
     }).toList();
   }
+
+  // Get todos with date filtering
+  Future<List<Todo>> getTodosByDateRange(
+    DateTime startDate,
+    DateTime endDate,
+  ) async {
+    final db = await database;
+    final finder = Finder(
+      filter: Filter.and([
+        Filter.greaterThan('endDate', startDate.millisecondsSinceEpoch - 1),
+        Filter.lessThan('endDate', endDate.millisecondsSinceEpoch + 1),
+      ]),
+      sortOrders: [SortOrder('endDate'), SortOrder('priority')],
+    );
+    final todosSnapshot = await store.find(db, finder: finder);
+
+    return todosSnapshot.map((snapshot) {
+      final todo = Todo.fromMap(snapshot.value);
+      todo.id = snapshot.key;
+      return todo;
+    }).toList();
+  }
+
+  // Get overdue todos
+  Future<List<Todo>> getOverdueTodos() async {
+    final db = await database;
+    final now = DateTime.now().millisecondsSinceEpoch;
+    final finder = Finder(
+      filter: Filter.and([
+        Filter.lessThan('endDate', now),
+        Filter.equals('isCompleted', 0),
+      ]),
+      sortOrders: [SortOrder('endDate'), SortOrder('priority')],
+    );
+    final todosSnapshot = await store.find(db, finder: finder);
+
+    return todosSnapshot.map((snapshot) {
+      final todo = Todo.fromMap(snapshot.value);
+      todo.id = snapshot.key;
+      return todo;
+    }).toList();
+  }
+
+  // Get todos due today
+  Future<List<Todo>> getTodosDueToday() async {
+    final now = DateTime.now();
+    final startOfDay = DateTime(
+      now.year,
+      now.month,
+      now.day,
+    ).millisecondsSinceEpoch;
+    final endOfDay = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      23,
+      59,
+      59,
+    ).millisecondsSinceEpoch;
+
+    return getTodosByDateRange(
+      DateTime.fromMillisecondsSinceEpoch(startOfDay),
+      DateTime.fromMillisecondsSinceEpoch(endOfDay),
+    );
+  }
+
+  // Get todos with reminders
+  Future<List<Todo>> getTodosWithReminders() async {
+    final db = await database;
+    final finder = Finder(
+      filter: Filter.notEquals('reminderDate', null),
+      sortOrders: [SortOrder('reminderDate'), SortOrder('priority')],
+    );
+    final todosSnapshot = await store.find(db, finder: finder);
+
+    return todosSnapshot.map((snapshot) {
+      final todo = Todo.fromMap(snapshot.value);
+      todo.id = snapshot.key;
+      return todo;
+    }).toList();
+  }
+
+  // Update todo completion status
+  Future<void> updateTodoCompletion(int todoId, bool isCompleted) async {
+    final db = await database;
+    final finder = Finder(filter: Filter.byKey(todoId));
+    final updateData = {
+      'isCompleted': isCompleted ? 1 : 0,
+      'completedAt': isCompleted ? DateTime.now().millisecondsSinceEpoch : null,
+    };
+    await store.update(db, updateData, finder: finder);
+  }
 }
