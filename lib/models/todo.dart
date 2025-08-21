@@ -17,6 +17,9 @@ class Todo {
   String? notificationId;
   DateTime? completedAt;
 
+  // UI state fields
+  bool isExpanded;
+
   Todo(
     this.name,
     this.description,
@@ -28,6 +31,7 @@ class Todo {
     this.isCompleted = false,
     this.notificationId,
     this.completedAt,
+    this.isExpanded = false,
   });
 
   Map<String, dynamic> toMap() {
@@ -42,6 +46,7 @@ class Todo {
       'isCompleted': isCompleted ? 1 : 0,
       'notificationId': notificationId,
       'completedAt': completedAt?.millisecondsSinceEpoch,
+      'isExpanded': isExpanded ? 1 : 0,
     };
   }
 
@@ -65,6 +70,7 @@ class Todo {
       completedAt: map['completedAt'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['completedAt'])
           : null,
+      isExpanded: map['isExpanded'] == 1 || false,
     );
   }
 
@@ -92,6 +98,7 @@ class Todo {
     bool? isCompleted,
     String? notificationId,
     DateTime? completedAt,
+    bool? isExpanded,
   }) {
     return Todo(
       name ?? this.name,
@@ -104,6 +111,7 @@ class Todo {
       isCompleted: isCompleted ?? this.isCompleted,
       notificationId: notificationId ?? this.notificationId,
       completedAt: completedAt ?? this.completedAt,
+      isExpanded: isExpanded ?? this.isExpanded,
     )..id = id ?? this.id;
   }
 }
