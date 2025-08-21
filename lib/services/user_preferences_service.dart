@@ -58,7 +58,7 @@ class UserPreferencesService {
     }
   }
 
-  // ===== TODO PREFERENCES =====
+  // =====  PREFERENCES =====
 
   /// Save todo preferences
   Future<bool> saveTodoPreferences({

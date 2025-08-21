@@ -27,7 +27,7 @@ class PreferencesConstants {
   static const String autoBackup = 'auto_backup';
   static const String firstLaunch = 'first_launch';
 
-  // ===== TODO SPECIFIC PREFERENCES =====
+  // =====  SPECIFIC PREFERENCES =====
   static const String todoPreferences = 'todo_preferences';
   static const String defaultPriority = 'default_priority';
   static const String defaultReminderTime = 'default_reminder_time';
