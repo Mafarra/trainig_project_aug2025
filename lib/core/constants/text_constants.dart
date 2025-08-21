@@ -6,6 +6,7 @@ class TextConstants {
   static const String completeByLabel = 'Complete By';
   static const String priorityLabel = 'Priority';
   static const String saveSuccess = 'تمت عملية الحفظ بنجاح';
+  static const String addSuccess = 'تمت عملية الإضافة بنجاح';
   static const String updateSuccess = 'تم تحديث البيانات بنجاح';
   static const String deleteSuccess = 'تم الحذف بنجاح';
   static const String errorOccurredSave = 'حدث خطأ أثناء الحفظ';
@@ -60,4 +61,8 @@ class TextConstants {
   static const String selectTime = 'Select Time';
   static const String setReminder = 'Set Reminder';
   static const String noReminder = 'No Reminder';
+
+  // Status notification messages
+  static const String taskCompletedMessage = 'تم وضع المهمة كمكتملة';
+  static const String taskUncompletedMessage = 'تم التراجع عن الإنجاز';
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trainig_project_aug2025/core/constants/app_colors.dart';
 import 'package:trainig_project_aug2025/core/constants/size_constants.dart';
+import 'package:trainig_project_aug2025/core/constants/theme_constants.dart';
 
 class AnimationHelpers {
   static Duration defaultDuration = const Duration(milliseconds: 300);
@@ -125,6 +126,8 @@ class AnimationHelpers {
     return ListView.builder(
       itemCount: itemCount,
       itemBuilder: (context, index) {
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+
         return Padding(
           padding: EdgeInsets.symmetric(
             horizontal: SizeConstants.paddingL,
@@ -137,9 +140,9 @@ class AnimationHelpers {
               borderRadius: BorderRadius.circular(SizeConstants.radiusM),
               gradient: LinearGradient(
                 colors: [
-                  AppColors.shimmerBase,
-                  AppColors.shimmerHighlight,
-                  AppColors.shimmerEnd,
+                  ThemeConstants.getShimmerBaseColor(isDark),
+                  ThemeConstants.getShimmerHighlightColor(isDark),
+                  ThemeConstants.getShimmerBaseColor(isDark),
                 ],
                 stops: [0.1, 0.5, 0.9],
                 begin: Alignment(-1, -0.3),

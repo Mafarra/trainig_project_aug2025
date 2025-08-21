@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:trainig_project_aug2025/blocs/todo_bloc.dart';
 import 'package:trainig_project_aug2025/core/constants/size_constants.dart';
 import 'package:trainig_project_aug2025/core/constants/text_constants.dart';
-import 'package:trainig_project_aug2025/features/todo/presentation/pages/home_page.dart';
+
 import 'package:trainig_project_aug2025/features/todo/presentation/widgets/app_widgets.dart';
 import 'package:trainig_project_aug2025/helpers/animation_helpers.dart';
 import 'package:trainig_project_aug2025/helpers/helpr_methods.dart';
@@ -114,7 +114,7 @@ class _TodoDetailsState extends State<TodoDetails> {
                     return;
                   }
                   // ✅ لو الفحص مرّ، نكمل الحفظ
-                  await HelperMethods.saveTodo(
+                  final successMessage = await HelperMethods.saveTodo(
                     bloc: bloc,
                     todo: Todo(
                       txtName.text.trim(),
@@ -131,11 +131,13 @@ class _TodoDetailsState extends State<TodoDetails> {
 
                   // ✅ نرجع للهوم
                   if (context.mounted) {
-                    Navigator.pushAndRemoveUntil(
+                    Navigator.pop(
                       context,
-                      MaterialPageRoute(builder: (context) => const HomePage()),
-                      (route) => false,
-                    );
+                    ); // Just go back instead of recreating
+                    // ✅ عرض رسالة النجاح
+                    if (context.mounted) {
+                      HelperMethods.showSuccess(context, successMessage);
+                    }
                   } else {
                     // Handle unmounted case - show success message and stay on current screen
                     if (context.mounted) {
