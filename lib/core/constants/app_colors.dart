@@ -53,21 +53,39 @@ class AppColors {
   static const Color gray800 = Color(0xFF424242);
   static const Color gray900 = Color(0xFF212121);
 
-  // ===== BACKGROUND COLORS =====
-  static const Color background = Color(0xFFFFF8E1); // Light amber background
-  static const Color surface = white;
-  static const Color cardBackground = white;
+  // ===== DARK THEME COLORS =====
+  static const Color darkBackground = Color(0xFF121212);
+  static const Color darkSurface = Color(0xFF1E1E1E);
+  static const Color darkCardBackground = Color(0xFF2D2D2D);
+  static const Color darkTextPrimary = Color(0xFFE0E0E0);
+  static const Color darkTextSecondary = Color(0xFFB0B0B0);
+  static const Color darkTextDisabled = Color(0xFF666666);
+  static const Color darkDivider = Color(0x4DFFFFFF);
+  static const Color darkDividerLight = Color(0x1FFFFFFF);
 
-  // ===== TEXT COLORS =====
-  static const Color textPrimary = Color(0xFF212121);
-  static const Color textSecondary = Color(0xFF757575);
-  static const Color textDisabled = Color(0xFFBDBDBD);
+  // ===== LIGHT THEME COLORS =====
+  static const Color lightBackground = Color(
+    0xFFFFF8E1,
+  ); // Light amber background
+  static const Color lightSurface = white;
+  static const Color lightCardBackground = white;
+  static const Color lightTextPrimary = Color(0xFF212121);
+  static const Color lightTextSecondary = Color(0xFF757575);
+  static const Color lightTextDisabled = Color(0xFFBDBDBD);
+  static const Color lightDivider = Color(0x4D000000);
+  static const Color lightDividerLight = Color(0x1F000000);
+
+  // ===== LEGACY COLORS (for backward compatibility) =====
+  static const Color background = lightBackground;
+  static const Color surface = lightSurface;
+  static const Color cardBackground = lightCardBackground;
+  static const Color textPrimary = lightTextPrimary;
+  static const Color textSecondary = lightTextSecondary;
+  static const Color textDisabled = lightTextDisabled;
   static const Color textOnPrimary = white;
   static const Color textOnSecondary = black;
-
-  // ===== DIVIDER COLORS =====
-  static const Color divider = Color(0x4D000000); // Black with 30% opacity
-  static const Color dividerLight = Color(0x1F000000); // Black with 12% opacity
+  static const Color divider = lightDivider;
+  static const Color dividerLight = lightDividerLight;
 
   // ===== SHADOW COLORS =====
   static const Color shadow = Color(0x1F000000); // Black with 12% opacity
@@ -105,4 +123,61 @@ class AppColors {
   static const Color appBarForeground = white;
   static const Color floatingActionButton = primary;
   static const Color floatingActionButtonIcon = white;
+
+  // ===== THEME-AWARE COLOR GETTERS =====
+
+  /// Get background color based on theme
+  static Color getBackgroundColor(bool isDark) {
+    return isDark ? darkBackground : lightBackground;
+  }
+
+  /// Get surface color based on theme
+  static Color getSurfaceColor(bool isDark) {
+    return isDark ? darkSurface : lightSurface;
+  }
+
+  /// Get card background color based on theme
+  static Color getCardBackgroundColor(bool isDark) {
+    return isDark ? darkCardBackground : lightCardBackground;
+  }
+
+  /// Get primary text color based on theme
+  static Color getTextPrimaryColor(bool isDark) {
+    return isDark ? darkTextPrimary : lightTextPrimary;
+  }
+
+  /// Get secondary text color based on theme
+  static Color getTextSecondaryColor(bool isDark) {
+    return isDark ? darkTextSecondary : lightTextSecondary;
+  }
+
+  /// Get disabled text color based on theme
+  static Color getTextDisabledColor(bool isDark) {
+    return isDark ? darkTextDisabled : lightTextDisabled;
+  }
+
+  /// Get divider color based on theme
+  static Color getDividerColor(bool isDark) {
+    return isDark ? darkDivider : lightDivider;
+  }
+
+  /// Get light divider color based on theme
+  static Color getDividerLightColor(bool isDark) {
+    return isDark ? darkDividerLight : lightDividerLight;
+  }
+
+  /// Get shimmer base color based on theme
+  static Color getShimmerBaseColor(bool isDark) {
+    return isDark ? gray700 : gray300;
+  }
+
+  /// Get shimmer highlight color based on theme
+  static Color getShimmerHighlightColor(bool isDark) {
+    return isDark ? gray600 : gray100;
+  }
+
+  /// Get empty state text color based on theme
+  static Color getEmptyStateTextColor(bool isDark) {
+    return isDark ? gray400 : gray500;
+  }
 }

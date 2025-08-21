@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:trainig_project_aug2025/blocs/todo_bloc.dart';
+import 'package:trainig_project_aug2025/blocs/theme_bloc.dart';
 import 'package:trainig_project_aug2025/core/constants/app_colors.dart';
 import 'package:trainig_project_aug2025/core/constants/size_constants.dart';
 import 'package:trainig_project_aug2025/core/constants/text_constants.dart';
+import 'package:trainig_project_aug2025/core/constants/theme_constants.dart';
 import 'package:trainig_project_aug2025/features/todo/presentation/widgets/app_widgets.dart';
 import 'package:trainig_project_aug2025/helpers/animation_helpers.dart';
 import 'package:trainig_project_aug2025/helpers/helpr_methods.dart';
 import 'package:trainig_project_aug2025/models/todo.dart';
 import '../widgets/todo_item.dart';
+import '../widgets/animated_theme_toggle.dart';
 import '../pages/todo_details.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final ThemeBloc? themeBloc;
+
+  const HomePage({super.key, this.themeBloc});
 
   @override
   HomePageState createState() => HomePageState();
@@ -19,11 +24,14 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   TodoBloc? todoBloc;
+  ThemeBloc? themeBloc;
   List<Todo>? todos;
 
   @override
   void initState() {
     todoBloc = TodoBloc();
+    // Use passed themeBloc or create new one
+    themeBloc = widget.themeBloc ?? ThemeBloc();
     todoBloc!.getTodos();
     super.initState();
   }
@@ -31,6 +39,10 @@ class HomePageState extends State<HomePage> {
   @override
   void dispose() {
     todoBloc?.dispose();
+    // Only dispose if we created the themeBloc (not passed from parent)
+    if (widget.themeBloc == null) {
+      themeBloc?.dispose();
+    }
     super.dispose();
   }
 
@@ -39,7 +51,16 @@ class HomePageState extends State<HomePage> {
     Todo todo = Todo('', '', '', 0);
     todos = todoBloc?.todoList;
     return Scaffold(
-      appBar: AppBar(title: Text(TextConstants.appTitle)),
+      appBar: AppBar(
+        title: Text(TextConstants.appTitle),
+        actions: [
+          if (themeBloc != null)
+            Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: AnimatedThemeToggle(themeBloc: themeBloc!),
+            ),
+        ],
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: AnimationHelpers().animatedFAB(
         child: Icon(Icons.add),
@@ -65,11 +86,12 @@ class HomePageState extends State<HomePage> {
             }
             // 2️⃣ حالة القائمة فارغة
             if (todos.isEmpty) {
+              final isDark = Theme.of(context).brightness == Brightness.dark;
               return Center(
                 child: Text(
                   TextConstants.emptyTasks,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.emptyStateText,
+                    color: ThemeConstants.getEmptyStateTextColor(isDark),
                   ),
                 ),
               );
@@ -97,7 +119,7 @@ class HomePageState extends State<HomePage> {
                       onDelete: () {
                         todoBloc!.todoDeleteSink.add(todos[index]);
                         if (context.mounted) {
-                          HelperMethods.showError(
+                          HelperMethods.showSuccess(
                             context,
                             TextConstants.deleteSuccess,
                           );

@@ -3,6 +3,7 @@ import 'package:trainig_project_aug2025/blocs/todo_bloc.dart';
 import 'package:trainig_project_aug2025/core/constants/app_colors.dart';
 import 'package:trainig_project_aug2025/core/constants/size_constants.dart';
 import 'package:trainig_project_aug2025/core/constants/text_constants.dart';
+import 'package:trainig_project_aug2025/core/constants/theme_constants.dart';
 import 'package:trainig_project_aug2025/features/todo/presentation/widgets/app_widgets.dart';
 import 'package:trainig_project_aug2025/helpers/helpr_methods.dart';
 import 'package:trainig_project_aug2025/models/todo.dart';
@@ -25,12 +26,14 @@ class TodoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Dismissible(
       secondaryBackground: Container(
-        color: AppColors.dismissibleSuccess,
+        color: AppColors.dismissibleSuccess, // أخضر أو أي لون يدل على الإنجاز
         alignment: Alignment.centerRight,
         padding: EdgeInsets.only(right: SizeConstants.paddingL),
-        child: Icon(Icons.delete, color: AppColors.dismissibleIcon),
+        child: Icon(Icons.check, color: AppColors.dismissibleIcon),
       ),
       background: Container(
         color: AppColors.dismissibleError,
@@ -38,15 +41,32 @@ class TodoItem extends StatelessWidget {
         padding: EdgeInsets.only(left: SizeConstants.paddingL),
         child: Icon(Icons.delete, color: AppColors.dismissibleIcon),
       ),
-      key: Key(todo.id.toString()),
-      direction: DismissDirection.startToEnd,
       confirmDismiss: (direction) async {
-        return await HelperMethods.showDeleteConfirmationDialog(parentContext);
+        if (direction == DismissDirection.startToEnd) {
+          // السحب من اليسار لليمين → حذف
+          return await HelperMethods.showDeleteConfirmationDialog(
+            parentContext,
+          );
+        } else if (direction == DismissDirection.endToStart) {
+          // السحب من اليمين لليسار → تم الإنجاز
+          bloc.todoUpdateSink.add(
+            todo.copyWith(isCompleted: !todo.isCompleted),
+          );
+          // عرض الإشعار
+          HelperMethods.showTodoStatusNotification(
+            parentContext,
+            !todo.isCompleted,
+          );
+          return false; // لا نحذف العنصر
+        }
+        return false;
       },
+      key: Key(todo.id.toString()),
+      direction: DismissDirection.horizontal,
       onDismissed: (_) {
         bloc.todoDeleteSink.add(todo);
         if (parentContext.mounted) {
-          HelperMethods.showError(parentContext, TextConstants.deleteSuccess);
+          HelperMethods.showSuccess(parentContext, TextConstants.deleteSuccess);
         }
       },
       child: Column(
@@ -57,14 +77,23 @@ class TodoItem extends StatelessWidget {
               children: [
                 ReorderableDragStartListener(
                   index: index, // لازم تجيب الـ index من الـ ListView.builder
-                  child: Icon(Icons.drag_handle),
+                  child: Icon(
+                    Icons.drag_handle,
+                    color: ThemeConstants.getTextSecondaryColor(isDark),
+                  ),
                 ),
                 SizedBox(
                   width: SizeConstants.spacingS,
                 ), // مسافة بين الأيقونة و الـ CircleAvatar
                 CircleAvatar(
                   backgroundColor: AppColors.taskPriority,
-                  child: Text("${todo.priority}"),
+                  child: Text(
+                    "${todo.priority}",
+                    style: TextStyle(
+                      color: ThemeConstants.getTextPrimaryColor(!isDark),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -75,7 +104,12 @@ class TodoItem extends StatelessWidget {
                     todo.name,
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
+                      color: todo.isCompleted
+                          ? ThemeConstants.getTextDisabledColor(isDark)
+                          : ThemeConstants.getTextPrimaryColor(isDark),
+                      decoration: todo.isCompleted
+                          ? TextDecoration.lineThrough
+                          : null,
                     ),
                   ),
                 ),
@@ -84,6 +118,7 @@ class TodoItem extends StatelessWidget {
                   isOverdue: todo.isOverdue,
                   isDueToday: todo.isDueToday,
                   isDueSoon: todo.isDueSoon,
+                  context: context,
                 ),
               ],
             ),
@@ -96,7 +131,7 @@ class TodoItem extends StatelessWidget {
                     child: Text(
                       todo.description,
                       style: TextStyle(
-                        color: AppColors.textSecondary,
+                        color: ThemeConstants.getTextSecondaryColor(isDark),
                         fontSize: 14,
                       ),
                     ),

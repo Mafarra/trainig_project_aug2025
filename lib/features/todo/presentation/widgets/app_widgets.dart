@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:trainig_project_aug2025/core/constants/app_colors.dart';
 import 'package:trainig_project_aug2025/core/constants/size_constants.dart';
 import 'package:trainig_project_aug2025/core/constants/text_constants.dart';
+import 'package:trainig_project_aug2025/core/constants/theme_constants.dart';
 import 'package:trainig_project_aug2025/helpers/helpr_methods.dart';
 
 class AppWidgets {
@@ -84,6 +85,8 @@ class AppWidgets {
     required Function(DateTime?) onDateSelected,
     required State state,
   }) {
+    final isDark = Theme.of(state.context).brightness == Brightness.dark;
+
     return Padding(
       padding: EdgeInsets.all(SizeConstants.paddingXL),
       child: Column(
@@ -94,7 +97,7 @@ class AppWidgets {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
-              color: AppColors.textPrimary,
+              color: ThemeConstants.getTextPrimaryColor(isDark),
             ),
           ),
           SizedBox(height: SizeConstants.spacingS),
@@ -109,12 +112,19 @@ class AppWidgets {
                 builder: (context, child) {
                   return Theme(
                     data: Theme.of(context).copyWith(
-                      colorScheme: ColorScheme.light(
-                        primary: AppColors.primary,
-                        onPrimary: AppColors.white,
-                        surface: AppColors.surface,
-                        onSurface: AppColors.textPrimary,
-                      ),
+                      colorScheme: isDark
+                          ? ColorScheme.dark(
+                              primary: AppColors.primary,
+                              onPrimary: AppColors.white,
+                              surface: ThemeConstants.darkSurface,
+                              onSurface: ThemeConstants.darkTextPrimary,
+                            )
+                          : ColorScheme.light(
+                              primary: AppColors.primary,
+                              onPrimary: AppColors.white,
+                              surface: ThemeConstants.lightSurface,
+                              onSurface: ThemeConstants.lightTextPrimary,
+                            ),
                     ),
                     child: child!,
                   );
@@ -159,8 +169,11 @@ class AppWidgets {
             child: Container(
               padding: EdgeInsets.all(SizeConstants.paddingL),
               decoration: BoxDecoration(
-                border: Border.all(color: AppColors.gray300),
+                border: Border.all(
+                  color: ThemeConstants.getDividerColor(isDark),
+                ),
                 borderRadius: BorderRadius.circular(SizeConstants.radiusS),
+                color: ThemeConstants.getSurfaceColor(isDark),
               ),
               child: Row(
                 children: [
@@ -177,12 +190,15 @@ class AppWidgets {
                           : TextConstants.selectDate,
                       style: TextStyle(
                         color: selectedDate != null
-                            ? AppColors.textPrimary
-                            : AppColors.textSecondary,
+                            ? ThemeConstants.getTextPrimaryColor(isDark)
+                            : ThemeConstants.getTextSecondaryColor(isDark),
                       ),
                     ),
                   ),
-                  Icon(Icons.arrow_drop_down, color: AppColors.textSecondary),
+                  Icon(
+                    Icons.arrow_drop_down,
+                    color: ThemeConstants.getTextSecondaryColor(isDark),
+                  ),
                 ],
               ),
             ),
@@ -198,7 +214,11 @@ class AppWidgets {
     required bool isOverdue,
     required bool isDueToday,
     required bool isDueSoon,
+    BuildContext? context,
   }) {
+    final isDark = context != null
+        ? Theme.of(context).brightness == Brightness.dark
+        : false;
     Color chipColor;
     String statusText;
     IconData statusIcon;
@@ -220,7 +240,7 @@ class AppWidgets {
       statusText = TextConstants.dueSoonStatus;
       statusIcon = Icons.schedule;
     } else {
-      chipColor = AppColors.gray400;
+      chipColor = isDark ? ThemeConstants.gray600 : AppColors.gray400;
       statusText = TextConstants.pendingStatus;
       statusIcon = Icons.pending;
     }

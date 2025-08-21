@@ -3,6 +3,7 @@ import 'package:trainig_project_aug2025/blocs/todo_bloc.dart';
 import 'package:trainig_project_aug2025/core/constants/text_constants.dart';
 import 'package:trainig_project_aug2025/models/todo.dart';
 import 'package:trainig_project_aug2025/services/notification_service.dart';
+import 'package:another_flushbar/flushbar.dart';
 
 class HelperMethods {
   /// تحقق إذا كانت أي من الحقول فارغة
@@ -10,15 +11,274 @@ class HelperMethods {
     return controllers.any((c) => c.text.trim().isEmpty);
   }
 
-  /// عرض رسالة خطأ للمستخدم
+  /// عرض رسالة خطأ للمستخدم باستخدام Flushbar
   static void showError(BuildContext context, String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    _showFlushbar(
+      context: context,
+      message: message,
+      backgroundColor: Colors.red.withValues(alpha: 0.95),
+      icon: Icons.error_outline,
+    );
+  }
+
+  /// عرض رسالة خطأ مع أيقونة مخصصة
+  static void showErrorWithIcon(
+    BuildContext context,
+    String message,
+    IconData icon,
+  ) {
+    _showFlushbar(
+      context: context,
+      message: message,
+      backgroundColor: Colors.red.withValues(alpha: 0.95),
+      icon: icon,
+    );
+  }
+
+  /// عرض رسالة نجاح باستخدام Flushbar
+  static void showSuccess(BuildContext context, String message) {
+    _showFlushbar(
+      context: context,
+      message: message,
+      backgroundColor: Colors.green.withValues(alpha: 0.95),
+      icon: Icons.check_circle,
+    );
+  }
+
+  /// عرض رسالة نجاح مع أيقونة مخصصة
+  static void showSuccessWithIcon(
+    BuildContext context,
+    String message,
+    IconData icon,
+  ) {
+    _showFlushbar(
+      context: context,
+      message: message,
+      backgroundColor: Colors.green.withValues(alpha: 0.95),
+      icon: icon,
+    );
+  }
+
+  /// عرض رسالة تحذير باستخدام Flushbar
+  static void showWarning(BuildContext context, String message) {
+    _showFlushbar(
+      context: context,
+      message: message,
+      backgroundColor: Colors.orange.withValues(alpha: 0.95),
+      icon: Icons.warning,
+    );
+  }
+
+  /// عرض رسالة تحذير مع أيقونة مخصصة
+  static void showWarningWithIcon(
+    BuildContext context,
+    String message,
+    IconData icon,
+  ) {
+    _showFlushbar(
+      context: context,
+      message: message,
+      backgroundColor: Colors.orange.withValues(alpha: 0.95),
+      icon: icon,
+    );
+  }
+
+  /// عرض رسالة معلومات باستخدام Flushbar
+  static void showInfo(BuildContext context, String message) {
+    _showFlushbar(
+      context: context,
+      message: message,
+      backgroundColor: Colors.blue.withValues(alpha: 0.95),
+      icon: Icons.info,
+    );
+  }
+
+  /// عرض رسالة معلومات مع أيقونة مخصصة
+  static void showInfoWithIcon(
+    BuildContext context,
+    String message,
+    IconData icon,
+  ) {
+    _showFlushbar(
+      context: context,
+      message: message,
+      backgroundColor: Colors.blue.withValues(alpha: 0.95),
+      icon: icon,
+    );
+  }
+
+  /// عرض رسالة مع أزرار إجراءات باستخدام Flushbar
+  static void showActionFlushbar({
+    required BuildContext context,
+    required String message,
+    required String actionText,
+    required VoidCallback onAction,
+    Color backgroundColor = Colors.blue,
+    IconData icon = Icons.info,
+  }) {
+    Flushbar(
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      borderRadius: BorderRadius.circular(16),
+      backgroundColor: backgroundColor.withValues(alpha: 0.95),
+      icon: Icon(icon, color: Colors.white, size: 28),
+      messageText: Text(
+        message,
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.w600,
+          fontSize: 16,
+        ),
+      ),
+      mainButton: TextButton(
+        onPressed: () {
+          onAction();
+        },
+        child: Text(
+          actionText,
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+      ),
+      duration: Duration(seconds: 5),
+      flushbarPosition: FlushbarPosition.BOTTOM,
+      animationDuration: Duration(milliseconds: 300),
+      forwardAnimationCurve: Curves.easeOut,
+      reverseAnimationCurve: Curves.easeIn,
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      boxShadows: [
+        BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(0, 3)),
+      ],
+    ).show(context);
+  }
+
+  /// إغلاق جميع رسائل Flushbar
+  static void dismissAllFlushbars(BuildContext context) {
+    // Note: Flushbar.dismiss() is not available in static context
+    // This method is kept for future implementation
+  }
+
+  /// عرض رسالة Flushbar مع تخصيص كامل
+  static void showCustomFlushbarWithDuration({
+    required BuildContext context,
+    required String message,
+    required Color backgroundColor,
+    required IconData icon,
+    Duration duration = const Duration(seconds: 3),
+    FlushbarPosition position = FlushbarPosition.BOTTOM,
+  }) {
+    _showFlushbar(
+      context: context,
+      message: message,
+      backgroundColor: backgroundColor,
+      icon: icon,
+      duration: duration,
+    );
+  }
+
+  /// عرض رسالة Flushbar مع تخصيص كامل للون والأيقونة
+  static void showCustomFlushbarWithColor({
+    required BuildContext context,
+    required String message,
+    required Color backgroundColor,
+    IconData? icon,
+    Duration duration = const Duration(seconds: 3),
+  }) {
+    _showFlushbar(
+      context: context,
+      message: message,
+      backgroundColor: backgroundColor,
+      icon: icon ?? Icons.info,
+      duration: duration,
+    );
+  }
+
+  /// عرض رسالة Flushbar مع تخصيص كامل للون والأيقونة
+  static void showCustomFlushbarWithColorAndIcon({
+    required BuildContext context,
+    required String message,
+    required Color backgroundColor,
+    required IconData icon,
+    Duration duration = const Duration(seconds: 3),
+  }) {
+    _showFlushbar(
+      context: context,
+      message: message,
+      backgroundColor: backgroundColor,
+      icon: icon,
+      duration: duration,
+    );
+  }
+
+  /// دالة مساعدة عامة لعرض Flushbar
+  static void _showFlushbar({
+    required BuildContext context,
+    required String message,
+    required Color backgroundColor,
+    required IconData icon,
+    Duration duration = const Duration(seconds: 2),
+  }) {
+    Flushbar(
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      borderRadius: BorderRadius.circular(16),
+      backgroundColor: backgroundColor,
+      icon: Icon(icon, color: Colors.white, size: 28),
+      messageText: Text(
+        message,
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.w600,
+          fontSize: 16,
+        ),
+      ),
+      duration: duration,
+      flushbarPosition: FlushbarPosition.BOTTOM,
+      animationDuration: Duration(milliseconds: 300),
+      forwardAnimationCurve: Curves.easeOut,
+      reverseAnimationCurve: Curves.easeIn,
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      boxShadows: [
+        BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(0, 3)),
+      ],
+    ).show(context);
+  }
+
+  /// عرض Flushbar مخصص بالكامل
+  static void showCustomFlushbar({
+    required BuildContext context,
+    required String message,
+    Color? backgroundColor,
+    IconData? icon,
+    Duration? duration,
+    FlushbarPosition? position,
+    Widget? mainButton,
+  }) {
+    Flushbar(
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      borderRadius: BorderRadius.circular(16),
+      backgroundColor: backgroundColor ?? Colors.blue.withValues(alpha: 0.95),
+      icon: icon != null ? Icon(icon, color: Colors.white, size: 28) : null,
+      messageText: Text(
+        message,
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.w600,
+          fontSize: 16,
+        ),
+      ),
+      duration: duration ?? Duration(seconds: 3),
+      flushbarPosition: position ?? FlushbarPosition.BOTTOM,
+      animationDuration: Duration(milliseconds: 300),
+      forwardAnimationCurve: Curves.easeOut,
+      reverseAnimationCurve: Curves.easeIn,
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      mainButton: mainButton,
+      boxShadows: [
+        BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(0, 3)),
+      ],
+    ).show(context);
   }
 
   /// حفظ البيانات (يمكن تعديلها حسب مشروعك)
-  static Future<void> saveTodo({
+  static Future<String> saveTodo({
     required TodoBloc bloc,
     required Todo todo,
     required bool isNew,
@@ -27,22 +287,16 @@ class HelperMethods {
     // ✅ تحقق من الحقول
     if (isNew) {
       bloc.todoInsertSink.add(todo);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(TextConstants.saveSuccess)));
-
       // Schedule notification if reminder date is set
       if (todo.reminderDate != null) {
         await scheduleTodoNotification(todo);
       }
+      return TextConstants.addSuccess;
     } else {
       bloc.todoUpdateSink.add(todo);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(TextConstants.updateSuccess)));
-
       // Update notification if reminder date changed
       await updateTodoNotification(todo);
+      return TextConstants.updateSuccess;
     }
   }
 
@@ -316,5 +570,23 @@ class HelperMethods {
     if (todo.reminderDate != null) {
       await scheduleTodoNotification(todo);
     }
+  }
+
+  /// Show beautiful status notification using Flushbar
+  static void showTodoStatusNotification(
+    BuildContext context,
+    bool isCompleted,
+  ) {
+    _showFlushbar(
+      context: context,
+      message: isCompleted
+          ? TextConstants.taskCompletedMessage
+          : TextConstants.taskUncompletedMessage,
+      backgroundColor: isCompleted
+          ? Colors.green.withValues(alpha: 0.95)
+          : Colors.red.withValues(alpha: 0.95),
+      icon: isCompleted ? Icons.check_circle : Icons.cancel,
+      duration: Duration(seconds: 2),
+    );
   }
 }
